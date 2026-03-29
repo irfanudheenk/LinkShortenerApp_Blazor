@@ -41,7 +41,7 @@ POST /api/shorten
 
 ## Author
 
-Irfan Udh een K
+Irfanudheen K
 
 ## License
 
