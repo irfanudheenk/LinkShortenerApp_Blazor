@@ -1,0 +1,43 @@
+﻿# .NET Core build outputs
+/bin/
+/obj/
+/out/
+/publish/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Visual Studio Code
+.vscode/
+.idea/
+
+# Visual Studio
+.vs/
+*.vssettings
+
+# Database files
+*.mdf
+*.ldf
+*.db
+
+# Logs
+*.log
+logs/
+**/logs/
+
+# Environment files
+.env
+appsettings.Development.json
+
+# Temporary files
+*.tmp
+*.temp
+*.cache
+
+# OS generated files
+.DS_Store
+Thumbs.db
+Desktop.ini

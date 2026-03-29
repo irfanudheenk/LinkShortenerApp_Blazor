@@ -1,0 +1,104 @@
+﻿@page "/"
+@inject IJSRuntime JS
+
+<PageTitle>URL Shortener</PageTitle>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h2 class="text-center mb-4">URL Shortener</h2>
+
+                    <div class="mb-3">
+                        <label class="form-label">Enter URL:</label>
+                        <input type="text"
+                               class="form-control"
+                               id="urlInput"
+                               placeholder="https://google.com" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Custom code (optional):</label>
+                        <input type="text"
+                               class="form-control"
+                               id="customCodeInput"
+                               placeholder="mycode" />
+                    </div>
+
+                    <button class="btn btn-primary w-100" onclick="shortenUrl()">
+                        Shorten URL
+                    </button>
+
+                    <div id="resultDiv" style="display:none;" class="alert alert-success mt-3"></div>
+                    <div id="errorDiv" style="display:none;" class="alert alert-danger mt-3"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    async function shortenUrl() {
+        const url = document.getElementById('urlInput').value;
+        const customCode = document.getElementById('customCodeInput').value;
+        const resultDiv = document.getElementById('resultDiv');
+        const errorDiv = document.getElementById('errorDiv');
+
+        resultDiv.style.display = 'none';
+        errorDiv.style.display = 'none';
+
+        if (!url) {
+            errorDiv.innerHTML = 'Please enter a URL';
+            errorDiv.style.display = 'block';
+            return;
+        }
+
+        try {
+            const response = await fetch('/api/shorten', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    originalUrl: url,
+                    customCode: customCode || null
+                })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                resultDiv.innerHTML = `<strong>Short URL:</strong><br /><a href="${data.shortUrl}" target="_blank">${data.shortUrl}</a>`;
+                resultDiv.style.display = 'block';
+                document.getElementById('urlInput').value = '';
+                document.getElementById('customCodeInput').value = '';
+            } else {
+                errorDiv.innerHTML = data.error || 'Failed to shorten URL';
+                errorDiv.style.display = 'block';
+            }
+        } catch (error) {
+            errorDiv.innerHTML = 'Error: ' + error.message;
+            errorDiv.style.display = 'block';
+        }
+    }
+</script>
+
+<style>
+    .card {
+        border-radius: 15px;
+        border: none;
+        box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        padding: 12px;
+    }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            transition: transform 0.2s;
+        }
+</style>
